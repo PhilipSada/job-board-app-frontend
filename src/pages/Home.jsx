@@ -100,7 +100,10 @@ const Home = () => {
           <div className="lg:px-24 px-4 py-12">
             <div className="bg-white p-4 rounded min-h-[300px]">
               {isLoading ? ( // Loading indicator
-                <p className="font-medium">Loading...</p>
+                <div className="h-[250px] flex items-center justify-center flex-col">
+                  <p className="font-medium text-center text-lg">Loading...</p>
+                  <p className="font-medium text-center text-sm mt-2">This application uses a free tier web service from render.com ( The first request may take a while) </p>
+                </div>
               ) : filteredJobs.length > 0 ? (
                 <>
                   <div>
