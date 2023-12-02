@@ -1,57 +1,63 @@
-import React, { useEffect, useState } from "react";
-import PageHeader from "../components/PageHeader";
-import { useParams } from "react-router-dom";
-import { FaBriefcase } from "react-icons/fa6";
-import Swal from 'sweetalert2'
+import React from "react";
+import { FiCalendar, FiClock, FiDollarSign, FiMapPin } from "react-icons/fi";
 import DOMPurify from "dompurify";
 
-const JobDetails = () => {
-  const { id } = useParams();
-  console.log(id);
-  const [job, setJob] = useState([]);
-  useEffect(() => {
-    fetch(`http://localhost:5000/all-jobs/${id}`)
-      .then((res) => res.json())
-      .then((data) => setJob(data));
-  }, []);
+const JobDetails = ({ data }) => {
+  const {
+    _id,
+    companyLogo,
+    jobTitle,
+    companyName,
+    jobLocation,
+    employmentType,
+    minPrice,
+    maxPrice,
+    postingDate,
+    description,
+    skills,
+  } = data;
 
-  const handleJobApply = async () => {
-    // console.log("btn clicked")
-    const { value: url } = await Swal.fire({
-      input: "url",
-      inputLabel: "CV or Resume URL address",
-      inputPlaceholder: "Enter the URL"
-    });
-    if (url) {
-      Swal.fire(`Entered URL: ${url}`).then((result) => {
-        /* Read more about isConfirmed, isDenied below */
-        if (result.isConfirmed) {
-          Swal.fire("Appliction Submited Successfully!", "", "success");
-        } else if (result.isDenied) {
-          Swal.fire("Changes are not saved", "", "info");
-        }
-      });
-    }
-    
-  }
+  const sanitizedHtml = DOMPurify.sanitize(description);
   return (
     <div className="">
-           <div className="mb-12">
-                <h2 className="text-2xl font-bold text-black font-inter">
-                    {job.jobTitle}
-                </h2>
-                <div className="md:flex-grow mr-8 mt-2 flex items-center justify-start">
-                    {
-                        job.skills.map((skill, index)=>(
-                            <span key={index} className="rounded-full inline-block mr-2 tracking-wide text-blue-500 text-xs font-medium title-font py-0.5 px-1.5 border border-blue-500 uppercase">{ skill.value }</span>
-                        ))
-                    }
-                </div>
+      <section className="card">
+        <div className="flex gap-4 flex-col sm:flex-row items-start">
+          <img src={companyLogo} alt={jobTitle} className="w-16 h-16 mb-4" />
+          <div className="card-details">
+            <h4 className="text-primary mb-1">{companyName}</h4>
+            <h3 className="text-lg font-semibold mb-2">{jobTitle}</h3>
+
+            <div className="text-primary/70 text-base flex flex-wrap gap-2 mb-2">
+              <span className="flex items-center gap-2">
+                <FiMapPin /> {jobLocation}
+              </span>
+              <span className="flex items-center gap-2">
+                <FiClock /> {employmentType}
+              </span>
+              <span className="flex items-center gap-2">
+                <FiDollarSign /> {minPrice}-{maxPrice}k
+              </span>
+              <span className="flex items-center gap-2">
+                <FiCalendar /> {postingDate}
+              </span>
             </div>
-            <div>
-                <div>{job.description}</div>
+            <div className="md:flex-grow mr-8 mt-2 flex items-center justify-start">
+              {skills.map((skill, index) => (
+                <span
+                  key={index}
+                  className="rounded-full inline-block mr-2 tracking-wide text-blue-500 text-xs font-medium title-font py-0.5 px-1.5 border border-blue-500 uppercase"
+                >
+                  {skill.value}
+                </span>
+              ))}
             </div>
-       
+            {/* <p className="text-base text-primary/70 ">{description}</p> */}
+            <div className="overflow-hidden line-clamp-2 max-h-12">
+              <div dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
