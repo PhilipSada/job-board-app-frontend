@@ -102,7 +102,7 @@ const Home = () => {
               {isLoading ? ( // Loading indicator
                 <div className="h-[250px] flex items-center justify-center flex-col">
                   <p className="font-medium text-center text-lg">Loading...</p>
-                  <p className="font-medium text-center text-sm mt-2">This application uses cyclic's free hosting service ( requests may take a while ) </p>
+                  <p className="font-medium text-center text-sm mt-2">This application uses vercel for hosting the express.js apis</p>
                 </div>
               ) : filteredJobs.length > 0 ? (
                 <>
